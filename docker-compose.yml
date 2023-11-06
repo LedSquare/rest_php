@@ -2,30 +2,33 @@ version: '3'
 
 services:
   php:
-    container_name: '${PREFIX_APP}php'
-    image: rest_php:${TAG}
+    container_name: 'php'
+    image: ${PREFIX_APP}php:${TAG}
     build:
-      context: ./docker/php
+      context: .
+      dockerfile: docker/php/Dockerfile
     volumes:
-      - './:/var/www/html'
+      - './:/site'
 
   server:
-    container_name: '${PREFIX_APP}nginx'
-    image: rest_nginx:${TAG}
+    container_name: 'nginx'
+    image: ${PREFIX_APP}nginx:${TAG}
     build:
-      context: ./docker/nginx
+      context: .
+      dockerfile: docker/nginx/Dockerfile
     ports:
       - 80:80
     volumes:
-      - './:/var/www/html'
+      - './:/site'
 
   db:
-    container_name: '${PREFIX_APP}mysql'
-    image: mysql:${TAG}
+    container_name: 'mysql'
+    image: ${PREFIX_APP}mysql:${TAG}
     build:
-      context: ./docker/mysql
+      context: ./
+      dockerfile: docker/mysql/Dockerfile
     ports:
-      - '3306:3306'
+      - 3306:3306
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       # - MYSQL_DATABASE=mysql

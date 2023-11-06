@@ -17,6 +17,7 @@ up: docker-up
 down: docker-down
 restart: down up
 build: docker-build
+rebuild: down build up 
 
 docker-build:
 	docker compose build
@@ -32,4 +33,6 @@ docker-clear-images-tag:
 	docker rmi $$(docker images --format '{{.Repository}}:{{.Tag}}' | grep ':${TAG}') -f
 docker-clear-images-name:
 	docker rmi $$(docker images --format '{{.Repository}}:{{.Tag}}' | grep '${PROJ}') -f
+composer-update:
+	docker exec -it ${PREFIX_APP}php composer update
 

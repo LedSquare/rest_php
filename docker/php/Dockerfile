@@ -8,4 +8,6 @@ RUN apk $CACHE update && apk $CACHE upgrade && apk $CACHE add bash
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
+WORKDIR /site
+
 

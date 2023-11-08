@@ -16,7 +16,7 @@ if (! function_exists('dd')){
 }
 
 if (! function_exists('dump')){
-    function dd($var)
+    function dump($var)
     {
         echo '<pre>';
         var_dump($var);

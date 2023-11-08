@@ -1,7 +1,8 @@
 {
     "description": "a",
     "autoload": {
-        "files":["app/Lib/helpers.php"],
+        "files":
+            ["app/Lib/helpers.php"],
         "psr-4": {
             "App\\": "app/"
         }

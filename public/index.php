@@ -6,6 +6,6 @@ use App\App;
 
 echo 'hello docker php!!!' . '<br>';
 
+
 App::run();
 
-dd($_ENV[]);

@@ -37,7 +37,6 @@ final class DatabaseMysqlConnection implements DBConnectionInterface
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
-            echo 'Это база';
             return $this->connection;
 
         } catch (\Exception $e) {
@@ -46,9 +45,12 @@ final class DatabaseMysqlConnection implements DBConnectionInterface
         }
     }
 
-    public function queryBuild(string $sql, $params = []): mixed
+    public function queryInject(string $sql, $params = []): mixed
     {
-        echo 'Запрос типо случился';
+        $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = :username AND age > :age");
+        $stmt->bindValue(':username', 'john', PDO::PARAM_STR);
+        $stmt->bindValue(':age', 25, PDO::PARAM_INT);
+        $stmt->execute();
     }
 
     public function closeConnection(): void

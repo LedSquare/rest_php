@@ -15,15 +15,15 @@ class ProductController
 
     private function processResourceRequest(string $method, string $id): void 
     {
-
-    }
-
-    private function processCollectionRequest(string $method): void 
-    {
         switch ($method) {
             case 'GET':
                 echo json_encode(["id" => 123]);
                 break;
         }
+    }
+
+    private function processCollectionRequest(string $method): void 
+    {
+        
     }
 }

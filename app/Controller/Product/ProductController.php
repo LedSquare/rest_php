@@ -24,6 +24,6 @@ class ProductController
 
     private function processCollectionRequest(string $method): void 
     {
-        
+
     }
 }

@@ -4,18 +4,28 @@ namespace App\Core\Database;
 
 use App\Core\Database\DBConnectionInterface;
 use PDO;
+use PDOException;
 
 final class DatabaseMysqlConnection implements DBConnectionInterface
 {
+    private static $instance = null;
     private string $host;
     private string $dbname;
     private string $user;
     private string $password;
     private ?PDO $connection = null;
 
-    public function __construct()
+    private function __construct()
     {
         $this->loadEnv();
+    }
+
+    public static function getInstance(): self {
+        if (null === static::$instance) {
+            static::$instance = new self();
+        }
+
+        return static::$instance;
     }
 
     private function loadEnv(): void
@@ -39,19 +49,12 @@ final class DatabaseMysqlConnection implements DBConnectionInterface
 
             return $this->connection;
 
-        } catch (\Exception $e) {
+        } catch (\PDOException $e) {
             echo 'Error: ', $e->getMessage(), "\n", "<hr>";
             die;
         }
     }
 
-    public function queryInject(string $sql, $params = []): mixed
-    {
-        $stmt = $this->connection->prepare("SELECT * FROM users WHERE username = :username AND age > :age");
-        $stmt->bindValue(':username', 'john', PDO::PARAM_STR);
-        $stmt->bindValue(':age', 25, PDO::PARAM_INT);
-        $stmt->execute();
-    }
 
     public function closeConnection(): void
     {

@@ -7,24 +7,20 @@ use PDO;
 
 class Database 
 {
-    private DBConnectionInterface $database;
+    private DBConnectionInterface $connection;
+    private ?PDO $pdo;
 
     public function __construct(DBConnectionInterface $connection)
     {
-        $this->database = $connection;
-        $this->database->connect();
+        $this->connection = $connection;
+        $this->pdo = $this->connection->connect();
     }
 
-    public function query(): mixed
+    public function query($sql): mixed
     {
-        $database = $this->database;
-
-        $stmt = $database->prepare("SELECT * FROM users WHERE username = :username AND age > :age");
-        $stmt->bindValue(':username', 'john', PDO::PARAM_STR);
-        $stmt->bindValue(':age', 25, PDO::PARAM_INT);
-        $stmt->execute();
+        $pdo = $this->pdo;
+        $result = $pdo->query($sql);
+        
     }
-
-    
 
 }

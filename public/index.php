@@ -10,6 +10,7 @@ use App\Controller\Product\ProductGateway;
 use App\Core\Database\DatabaseMysqlConnection;
 
 
+set_error_handler("App\Core\Errors\ErrorHandler::handleError");
 set_exception_handler("App\Core\Errors\ErrorHandler::handleException");
 
 header("Content-type: application/json; charset=UTF-8");
@@ -23,7 +24,9 @@ if ($parts[1] != "products"){
 
 $id = $parts[2] ?? null;
 
-$db = new Database(DatabaseMysqlConnection::getInstance());
+$mysqlConnection = DatabaseMysqlConnection::getInstance();
+
+$db = new Database($mysqlConnection);
 
 $gateway = new ProductGateway($db);
 

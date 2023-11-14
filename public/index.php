@@ -32,11 +32,11 @@ $gateway = new ProductGateway($db);
 
 $products = new ProductController($gateway);
 
-
-
-
-
 $products->processRequest($_SERVER['REQUEST_METHOD'], $id);
+
+
+
+
 // типо класс Database
 
 

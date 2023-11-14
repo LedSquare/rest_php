@@ -22,6 +22,15 @@ class ProductController
 
     private function processResourceRequest(string $method, string $id): void 
     {
+        $product = $this->gateway->get($id);
+
+        if (! $product){
+            http_response_code(404);
+            echo json_encode(["message" => "Product not found"]);
+            return;
+        }
+
+        echo json_encode($product);
 
     }
 
@@ -29,27 +38,32 @@ class ProductController
     {
         switch ($method) {
             case 'GET':
-                    echo json_encode($this->gateway->getAll());
-                break;
+                echo json_encode($this->gateway->getAll());
+            break;
 
             case 'POST': 
-                    $data = (array) json_decode(file_get_contents("php://input"), true);
-                    
-                    $errors = $this->getValidationErrors($data);
-                    
-                    if (! empty($errors)){
-                        http_response_code(422);
-                        echo json_encode(["errors" => $errors]);
-                    }
+                $data = (array) json_decode(file_get_contents("php://input"), true);
+                
+                $errors = $this->getValidationErrors($data);
+                
+                if (! empty($errors)){
+                    http_response_code(422);
+                    echo json_encode(["errors" => $errors]);
+                    return;
+                }
 
-                    $id = $this->gateway->createProduct($data);
-                    
-                    http_response_code(201);
-                    echo json_encode([
-                        "message" => "Product created",
-                        "id" => $id
-                    ]);
-                break;                
+                $id = $this->gateway->create($data);
+                
+                http_response_code(201);
+                echo json_encode([
+                    "message" => "Product created",
+                    "id" => $id
+                ]);
+            break;
+                
+            default:
+                http_response_code(405);
+                header("Allow: GET, POST");
         }
     }
 

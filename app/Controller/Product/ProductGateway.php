@@ -24,7 +24,7 @@ class ProductGateway
         return $data;
     }
 
-    public function createProduct(array $data)
+    public function create(array $data)
     {
         $sql = "INSERT INTO product (name, size, is_available) values (:name, 
         :size, :is_available)";
@@ -38,6 +38,24 @@ class ProductGateway
         $stmt->execute();
 
         return DB::lastInsertId();
+    }
+
+    public function get(string $id): array | false
+    {
+        $sql = "SELECT * FROM product WHERE id = :id";
+
+        $stmt = DB::prepare($sql);
+
+        $stmt->bindValue("id", $id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
         
+        if ($data !==false) {
+            $data["is_available"] = (bool) $data["is_available"];
+        }
+
+        return $data;
     }
 }

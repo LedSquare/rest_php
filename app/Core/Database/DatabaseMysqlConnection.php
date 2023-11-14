@@ -42,10 +42,12 @@ final class DatabaseMysqlConnection implements DBConnectionInterface
     {
         try {
 
-            $this->connection = new PDO("mysql:host=$this->host; dbname=$this->dbname", $this->user, $this->password);
+            $this->connection = new PDO("mysql:host=$this->host; dbname=$this->dbname; charset=utf8", $this->user, $this->password);
 
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $this->connection->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
 
             return $this->connection;
 

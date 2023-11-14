@@ -6,6 +6,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use App\Core\Database\Database;
 use App\App;
 use App\Controller\Product\ProductController;
+use App\Controller\Product\ProductGateway;
 use App\Core\Database\DatabaseMysqlConnection;
 
 
@@ -22,12 +23,13 @@ if ($parts[1] != "products"){
 
 $id = $parts[2] ?? null;
 
-echo 'Shya glyanem';
-
-$products = new ProductController();
-
-
 $db = new Database(DatabaseMysqlConnection::getInstance());
+
+$gateway = new ProductGateway($db);
+
+$products = new ProductController($gateway);
+
+
 
 
 

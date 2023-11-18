@@ -30,7 +30,48 @@ class ProductController
             return;
         }
 
-        echo json_encode($product);
+        switch ($method) {
+            case 'GET':
+                echo json_encode($product);
+                break;
+            case 'PATCH':
+
+                $data = (array) json_decode(file_get_contents("php://input"), true);
+                
+                $errors = $this->getValidationErrors($data, false);
+                
+                if (! empty($errors)){
+                    http_response_code(422);
+                    echo json_encode(["errors" => $errors]);
+                    return;
+                }
+
+                $rows = $this->gateway->update($product, $data);
+                
+                http_response_code(201);
+                echo json_encode([
+                    "message" => "Product $id updated",
+                    "rows" => $rows
+                ]);
+
+                break;
+                
+                case 'DELETE':
+                    $rows = $this->gateway->delete($id);
+                    
+                    echo json_encode([
+                        "message" => "Product $id is deleted",
+                        "rows" => $rows
+                    ]);
+
+                    break;  
+
+            default:
+                http_response_code(405);
+                header("Allow: GET, DELETE, PATCH");
+                break;
+        }
+        
 
     }
 
@@ -38,7 +79,7 @@ class ProductController
     {
         switch ($method) {
             case 'GET':
-                echo json_encode($this->gateway->getAll());
+                 echo $data = json_encode($this->gateway->getAll());
             break;
 
             case 'POST': 
@@ -67,11 +108,11 @@ class ProductController
         }
     }
 
-    private function getValidationErrors(array $data): array
+    private function getValidationErrors(array $data, bool $is_new = true): array
     {
         $errors = [];
 
-        if (empty($data["name"])) {
+        if ($is_new && empty($data["name"])) {
             $errors[] = "this is classic, this should be a know";
         }   
 
